@@ -4,9 +4,9 @@
  */
 package com.sourceallies.model;
 
-import javax.annotation.meta.Exclusive;
 import javax.validation.Valid;
 
+import com.google.common.annotations.Beta;
 import com.sourceallies.validation.annotation.Email;
 import com.sourceallies.validation.annotation.MinLength;
 import com.sourceallies.validation.annotation.NotEmpty;
@@ -17,18 +17,15 @@ import com.sourceallies.validation.annotation.Range;
  * 
  * @author Ghaith
  */
-@Exclusive
-public class ConsumerBean {
-	
+@Beta
+public class ConsumerBean1 {
 	@Valid
-	ConsumerBean1 child;
+	ConsumerBean2 parent;
 
-	@MinLength(value = 5, message = "Min Length of name field is 5.")
 	@NotEmpty(message = "This field can not be blank")
 	private String name;
 
 	@Email(message = "Pelese Enter valid email in format abc@xyz.com")
-	@MinLength(value = 5, message = "Min Length of name field is 5.")
 	private String email;
 
 	@Range(start = 1, end = 10, name = "length")
@@ -72,11 +69,11 @@ public class ConsumerBean {
 		this.name = name;
 	}
 	
-	public ConsumerBean1 getChild() {
-		return child;
+	public ConsumerBean2 getParent() {
+		return parent;
 	}
 	
-	public void setChild(ConsumerBean1 child) {
-		this.child = child;
+	public void setParent(ConsumerBean2 parent) {
+		this.parent = parent;
 	}
 }
