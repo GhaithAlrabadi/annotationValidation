@@ -4,6 +4,8 @@
  */
 package com.sourceallies.model;
 
+import javax.annotation.meta.Exclusive;
+
 import com.google.common.annotations.Beta;
 import com.sourceallies.validation.annotation.Email;
 import com.sourceallies.validation.annotation.MinLength;
@@ -15,7 +17,7 @@ import com.sourceallies.validation.annotation.Range;
  * 
  * @author Ghaith
  */
-@Beta
+@Exclusive
 public class ConsumerBean2 {
 
 	@MinLength(value = 5, message = "Min Length of name field is 5.")

@@ -4,6 +4,7 @@
  */
 package com.sourceallies.model;
 
+import javax.annotation.meta.Exclusive;
 import javax.validation.Valid;
 
 import com.google.common.annotations.Beta;
@@ -17,7 +18,7 @@ import com.sourceallies.validation.annotation.Range;
  * 
  * @author Ghaith
  */
-@Beta
+@Exclusive
 public class ConsumerBean1 {
 	@Valid
 	ConsumerBean2 parent;
