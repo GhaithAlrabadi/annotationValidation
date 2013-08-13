@@ -24,12 +24,13 @@ import org.reflections.util.FilterBuilder;
 
 public class MyBeanValidationTest {
 	Reflections reflections;
-
+	HtmlWriter htmlWriter = new HtmlWriter("target/validationTree");
 	String spaceCon = "        ";
 	File indexFile;
+	String packagePath = "com.sourceallies.model";
 
 	@Test
-	public void testIfItWork() {
+	public void createValidationTree() {
 
 		reflections = new Reflections(
 				new ConfigurationBuilder()
@@ -37,14 +38,14 @@ public class MyBeanValidationTest {
 								new ResourcesScanner())
 						.setUrls(
 								ClasspathHelper
-										.forPackage("com.sourceallies.model"))
+										.forPackage(packagePath))
 						.filterInputsBy(
 								new FilterBuilder().include(FilterBuilder
-										.prefix("com.sourceallies.model"))));
+										.prefix(packagePath))));
 
 		Set<Class<? extends Object>> classes = reflections
 				.getSubTypesOf(Object.class);
-		indexFile = createHTMLFile("index");
+		indexFile = htmlWriter.createFile("index");
 		scanAndLog(classes, "");
 	}
 
@@ -55,22 +56,22 @@ public class MyBeanValidationTest {
 		for (Class<? extends Object> classz : classes) {
 			System.out.println("");
 			System.out.println(space + classz.getSimpleName());
-			writeLinkToHTMLFile("index", classz.getSimpleName());
+			htmlWriter.writeLink("index", classz.getSimpleName());
 			System.out.println(space + "[");
 			Field[] fields = classz.getDeclaredFields();
 
 			Map<Field, List<Annotation>> fieldLvelAnnotations = getFieldWithConstrainAnnotationAsMap(fields);
-			createHTMLFile(classz.getSimpleName());
-			writeLinkToTEXTFile(classz.getSimpleName(),
+			htmlWriter.createFile(classz.getSimpleName());
+			htmlWriter.writeText(classz.getSimpleName(),
 					"<h2>" + classz.getSimpleName() + "</h2>");
-
+			
 			// more elegant way
 			for (Map.Entry<Field, List<Annotation>> entry : fieldLvelAnnotations
 					.entrySet()) {
-				writeLinkToTEXTFile(
-						classz.getSimpleName(),
-						"____________________________________________________________________________________________________________________________________");
-				writeLinkToTEXTFile(classz.getSimpleName(), "Field Name: "
+				htmlWriter
+						.writeText(classz.getSimpleName(),
+								"############################################################");
+				htmlWriter.writeText(classz.getSimpleName(), "Field Name: "
 						+ entry.getKey().getName());
 
 				for (Annotation temp : entry.getValue()) {
@@ -79,15 +80,15 @@ public class MyBeanValidationTest {
 								+ "Check Inner validation for ("
 								+ entry.getKey().getType().getSimpleName()
 								+ ")");
-						writeLinkToTEXTFile(classz.getSimpleName(), space
+						htmlWriter.writeText(classz.getSimpleName(), space
 								+ spaceCon + spaceCon
 								+ "Check Inner validation for:");
-						writeLinkToHTMLFile(classz.getSimpleName(), entry
+						htmlWriter.writeLink(classz.getSimpleName(), entry
 								.getKey().getType().getSimpleName());
 
 					} else {
 						System.out.println();
-						writeLinkToTEXTFile(classz.getSimpleName(), space
+						htmlWriter.writeText(classz.getSimpleName(), space
 								+ spaceCon + spaceCon + temp);
 					}
 				}
@@ -130,42 +131,6 @@ public class MyBeanValidationTest {
 
 		}
 		return false;
-	}
-
-	private File createHTMLFile(String name) {
-		File file = new File("target/" + name + ".html");
-		file.delete();
-		try {
-			FileUtils fileUtils = new FileUtils();
-			file.createNewFile();
-			fileUtils.writeStringToFile(file, "<h1>Validation Tree</h1>", true);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return file;
-	}
-
-	private void writeLinkToHTMLFile(String name, String data) {
-		FileUtils fileUtils = new FileUtils();
-		try {
-			fileUtils.writeStringToFile(new File("target/" + name + ".html"),
-					"<a href='./" + data + ".html'>" + data + "</a><br>", true);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private void writeLinkToTEXTFile(String name, String data) {
-		FileUtils fileUtils = new FileUtils();
-		try {
-			fileUtils.writeStringToFile(new File("target/" + name + ".html"),
-					"<br>" + data + "<br>", true);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }
